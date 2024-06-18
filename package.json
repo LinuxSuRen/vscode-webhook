@@ -20,7 +20,17 @@
         "command": "webhook.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+			"title": "Webhook",
+			"properties": {
+				"webhook.address": {
+					"type": "string",
+					"default": "",
+					"description": "The webhook address"
+				}
+			}
+		}
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

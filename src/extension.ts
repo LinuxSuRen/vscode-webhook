@@ -26,7 +26,24 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from webhook!');
 
     getListeningPorts().then(ports => {
+      const api = vscode.workspace.getConfiguration().get('webhook.address', '')
+
+      if (api && api !== "") {
+        fetch(api, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ports: ports
+          })
+        })
+      } else {
+        console.log(`skip to notify the listen ports`);
+      }
+
       ports.forEach(p => {
+        console.log(`get listen port: ${p}`);
         vscode.window.showInformationMessage(`Listening port: ${p}`);
       })
     }).catch(error => {
@@ -50,16 +67,13 @@ async function getListeningPorts(): Promise<number[]> {
         return;
       }
 
-      console.log(stdout)
-      // 解析标准输出，提取监听端口
       const lines = stdout.split('\n');
       const listeningPorts: number[] = [];
 
-      lines.forEach(line => {
-        const columns = line.split(/\s+/).filter(Boolean);
-        console.log(columns)
-        if (columns.length >= 4 && columns[3].includes('LISTEN')) {
-          const port = parseInt(columns[3].split('/')[0], 10);
+      lines.forEach((line) => {
+        const columns = line.split(/\s+/);
+        if (columns.length >= 7 && columns[5].includes('LISTEN')) {
+          const port = parseInt(columns[6].split('/')[0], 10);
           listeningPorts.push(port);
         }
       });

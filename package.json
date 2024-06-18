@@ -15,6 +15,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
+	"publisher": "linuxsuren",
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {

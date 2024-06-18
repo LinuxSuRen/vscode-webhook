@@ -1,7 +1,7 @@
 {
   "name": "webhook",
   "displayName": "webhook",
-  "description": "",
+  "description": "webhook for watching the listen ports",
   "version": "0.0.1",
   "repository": {
     "url": "https://github.com/linuxsuren/vscode-webhook"
@@ -12,15 +12,11 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "webhook.helloWorld",
-        "title": "Hello World"
-      }
-    ],
     "configuration": {
 			"title": "Webhook",
 			"properties": {
@@ -28,6 +24,11 @@
 					"type": "string",
 					"default": "",
 					"description": "The webhook address"
+				},
+        "webhook.interval": {
+					"type": "number",
+					"default": 2000,
+					"description": "The interval for getting the listen ports"
 				}
 			}
 		}

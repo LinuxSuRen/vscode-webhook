@@ -75,7 +75,7 @@ async function getListeningPorts(): Promise<number[]> {
       lines.forEach((line) => {
         const columns = line.split(/\s+/);
         if (columns.length >= 7 && columns[5].includes('LISTEN')) {
-          const ip = columns[4].split(':')
+          const ip = columns[3].split(':')
           const port = parseInt(ip[ip.length-1], 10);
           listeningPorts.push(port);
         }

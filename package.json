@@ -2,7 +2,7 @@
   "name": "webhook",
   "displayName": "webhook",
   "description": "webhook for watching the listen ports",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "url": "https://github.com/linuxsuren/vscode-webhook"
   },

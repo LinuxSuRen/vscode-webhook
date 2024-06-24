@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - master
+
+env:
+  IMG_TOOL: docker
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b  # v4.1.4
+      - name: Build
+        run: |
+          npm i
+          npm install -g @vscode/vsce
+          vsce package
+      - name: Publish
+        if: github.event_name != 'pull_request'
+        run: |
+          npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }}

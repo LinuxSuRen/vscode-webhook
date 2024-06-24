@@ -28,4 +28,4 @@ jobs:
       - name: Publish
         if: github.event_name != 'pull_request'
         run: |
-          npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }}
+          npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix

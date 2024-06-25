@@ -28,4 +28,7 @@ jobs:
       - name: Publish
         if: github.event_name != 'pull_request'
         run: |
+          export TAG=${GITHUB_REF#refs/*/}
+          export TAG=${TAG#"v"}
+          jq '.version = env.TAG' package.json > package.json.new && mv package.json.new package.json
           npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix

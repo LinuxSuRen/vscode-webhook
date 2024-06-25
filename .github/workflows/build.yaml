@@ -22,14 +22,15 @@ jobs:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b  # v4.1.4
       - name: Build
         run: |
+          export TAG=${GITHUB_REF#refs/*/}
+          export TAG=${TAG#"v"}
+          echo "start to package with ${TAG}"
+          jq '.version = env.TAG' package.json > package.json.new && mv package.json.new package.json
+
           npm i
           npm install -g @vscode/vsce
           vsce package
       - name: Publish
         if: github.event_name != 'pull_request'
         run: |
-          export TAG=${GITHUB_REF#refs/*/}
-          export TAG=${TAG#"v"}
-          echo "start to publish with ${TAG}"
-          jq '.version = env.TAG' package.json > package.json.new && mv package.json.new package.json
           npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix

@@ -30,5 +30,6 @@ jobs:
         run: |
           export TAG=${GITHUB_REF#refs/*/}
           export TAG=${TAG#"v"}
+          echo "start to publish with ${TAG}"
           jq '.version = env.TAG' package.json > package.json.new && mv package.json.new package.json
           npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix

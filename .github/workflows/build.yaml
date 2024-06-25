@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b  # v4.1.4
       - name: Update version
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name != 'pull_request'
         run: |
           export TAG=${GITHUB_REF#refs/*/}
           export TAG=${TAG#"v"}
@@ -35,11 +35,11 @@ jobs:
           npm install -g @vscode/vsce
           vsce package
       - name: Publish
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name != 'pull_request'
         run: |
           npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix
       - name: Upload Release Asset
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name != 'pull_request'
         run: gh release upload ${{github.event.release.tag_name}} *.vsix
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

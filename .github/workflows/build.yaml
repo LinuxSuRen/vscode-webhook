@@ -40,6 +40,8 @@ jobs:
           npx ovsx publish -p ${{ secrets.OPEN_VSX_TKN }} *.vsix
       - name: Upload Release Asset
         if: github.event_name != 'pull_request'
-        run: gh release upload ${{github.event.release.tag_name}} *.vsix
+        run: |
+          export TAG=${GITHUB_REF#refs/*/}
+          gh release upload ${TAG} *.vsix
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

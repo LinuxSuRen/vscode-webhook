@@ -18,6 +18,13 @@
 	"publisher": "linuxsuren",
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+			{
+				"command": "webhook.openLink",
+				"title": "Open Expose Link",
+				"description": "Open Expose Link."
+			}
+    ],
     "configuration": {
 			"title": "Webhook",
 			"properties": {

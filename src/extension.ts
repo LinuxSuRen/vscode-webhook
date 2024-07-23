@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
           })
 
-          exposePorts.forEach((port, statusBar) => {
+          exposePorts.forEach((statusBar, port) => {
             if (!newPorts.includes(port)) {
               exposePorts.delete(port)
               statusBar.dispose()

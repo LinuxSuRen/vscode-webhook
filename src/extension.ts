@@ -18,6 +18,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "webhook" is now active!');
 
+  const statusErrorBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  context.subscriptions.push(statusErrorBar);
+
   const interval = vscode.workspace.getConfiguration().get('webhook.interval', 2000)
   setInterval(() => {
     getListeningPorts().then(ports => {
@@ -32,14 +35,18 @@ export function activate(context: vscode.ExtensionContext) {
           body: JSON.stringify({
             ports: ports
           })
-        }).then( response => response.json()).then(data => data as Expose[]).then( data => {
-          let newPorts = [] as Array<number>
+        }).then( response => {
+          return response.json();
+        }).then(data => data as Expose[]).then( data => {
+          statusErrorBar.hide();
+
+          let newPorts = [] as Array<number>;
           data.forEach((p: Expose) => {
-            newPorts.push(p.port)
+            newPorts.push(p.port);
             if (!exposePorts.has(p.port)) {
-              const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left)
-              statusBar.text = `${p.port}`
-              statusBar.tooltip = `${p.link}`
+              const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+              statusBar.text = `${p.port}`;
+              statusBar.tooltip = `${p.link}`;
               statusBar.command = {
                 command: 'webhook.openLink',
                 title: 'Open Link',
@@ -50,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
               context.subscriptions.push(statusBar)
               exposePorts.set(p.port, statusBar)
             }
-          })
+          });
 
           exposePorts.forEach((statusBar, port) => {
             if (!newPorts.includes(port)) {
@@ -58,7 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
               statusBar.dispose()
             }
           });
-        })
+        }).catch(e => {
+          statusErrorBar.text = "webhook error";
+          statusErrorBar.tooltip = e.message;
+          statusErrorBar.show();
+        });
       } else {
         console.log(`skip to notify the listen ports`);
       }
